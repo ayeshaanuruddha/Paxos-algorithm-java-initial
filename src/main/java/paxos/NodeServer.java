@@ -4,17 +4,29 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
+/**
+ * The NodeServer class handles network communication for Paxos nodes.
+ * It listens for incoming connections and processes messages using NodeHandler.
+ */
 public class NodeServer extends Thread {
     private Node node;
     private int port;
 
+    /**
+     * Constructs a NodeServer object.
+     *
+     * @param node The node that will handle incoming messages.
+     * @param port The port on which to listen for incoming connections.
+     */
     public NodeServer(Node node, int port) {
         this.node = node;
         this.port = port;
     }
 
+    /**
+     * Runs the server, listening for incoming connections and spawning NodeHandler threads.
+     */
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
@@ -26,6 +38,13 @@ public class NodeServer extends Thread {
         }
     }
 
+    /**
+     * Sends a message to a specified hostname and port.
+     *
+     * @param hostname The hostname of the recipient.
+     * @param port     The port of the recipient.
+     * @param message  The message to send.
+     */
     public static void sendMessage(String hostname, int port, Message message) {
         try (Socket socket = new Socket(hostname, port);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
@@ -36,15 +55,27 @@ public class NodeServer extends Thread {
     }
 }
 
+/**
+ * The NodeHandler class processes incoming messages for a node.
+ */
 class NodeHandler extends Thread {
     private Socket socket;
     private Node node;
 
+    /**
+     * Constructs a NodeHandler object.
+     *
+     * @param socket The socket connected to the sender.
+     * @param node   The node that will handle the message.
+     */
     public NodeHandler(Socket socket, Node node) {
         this.socket = socket;
         this.node = node;
     }
 
+    /**
+     * Runs the handler, reading a message from the socket and passing it to the node.
+     */
     public void run() {
         try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
             Message message = (Message) in.readObject();

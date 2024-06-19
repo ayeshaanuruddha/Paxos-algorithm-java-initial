@@ -1,12 +1,20 @@
 package paxos;
 import java.util.List;
-
+/**
+ * Acceptor class in the Paxos protocol, responsible for handling proposals.
+ */
 public class Acceptor extends Node {
 
     public Acceptor(int nodeId, List<Node> peers, String hostname, int port) {
         super(nodeId, peers, hostname, port);
     }
 
+    /**
+     * Handles a prepare message from a proposer.
+     *
+     * @param proposalId The ID of the proposal.
+     * @param proposer   The proposer node.
+     */
     public void receivePrepare(int proposalId, Proposer proposer) {
         if (proposalId >= promisedId) {
             promisedId = proposalId;
@@ -14,6 +22,13 @@ public class Acceptor extends Node {
         }
     }
 
+    /**
+     * Handles an accept request from a proposer.
+     *
+     * @param proposalId The ID of the proposal.
+     * @param value      The value proposed to be accepted.
+     * @param proposer   The proposer node.
+     */
     public void receiveAcceptRequest(int proposalId, int value, Node proposer) {
         if (proposalId >= promisedId) {
             promisedId = proposalId;
@@ -40,6 +55,12 @@ public class Acceptor extends Node {
         }
     }
 
+    /**
+     * Finds a node by its ID from the list of peers.
+     *
+     * @param nodeId The ID of the node to find.
+     * @return The node with the specified ID, or null if not found.
+     */
     private Node findNodeById(int nodeId) {
         for (Node node : peers) {
             if (node.nodeId == nodeId) {

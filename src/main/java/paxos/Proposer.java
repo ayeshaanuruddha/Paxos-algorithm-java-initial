@@ -3,7 +3,9 @@ package paxos;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Proposer class in the Paxos protocol, responsible for initiating proposals.
+ */
 public class Proposer extends Node {
 
     private int proposalId;
@@ -22,6 +24,11 @@ public class Proposer extends Node {
         return (int) (Math.random() * 1000);
     }
 
+    /**
+     * Initiates a new proposal with the specified value.
+     *
+     * @param value The value to propose.
+     */
     public void propose(int value) {
         this.proposalId = generateProposalId();
         this.proposedValue = value;
@@ -30,6 +37,14 @@ public class Proposer extends Node {
         sendMessageToAll(new Message(Message.Type.PREPARE, proposalId, value, nodeId));
     }
 
+    /**
+     * Processes the promise messages from acceptors.
+     *
+     * @param acceptor     The acceptor node that sent the promise.
+     * @param proposalId   The ID of the proposal for which the promise was made.
+     * @param acceptedId   The ID of the previously accepted proposal (if any).
+     * @param acceptedValue The value of the previously accepted proposal (if any).
+     */
     public void receivePromise(Acceptor acceptor, int proposalId, int acceptedId, int acceptedValue) {
         if (proposalId == this.proposalId) {
             promises.put(acceptor, acceptedId);
@@ -67,6 +82,12 @@ public class Proposer extends Node {
         }
     }
 
+    /**
+     * Finds a node by its ID from the list of peers.
+     *
+     * @param nodeId The ID of the node to find.
+     * @return The node with the specified ID, or null if not found.
+     */
     private Node findNodeById(int nodeId) {
         for (Node node : peers) {
             if (node.nodeId == nodeId) {

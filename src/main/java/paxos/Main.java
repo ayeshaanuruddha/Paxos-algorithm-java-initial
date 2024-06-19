@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+
         int numNodes = 5;
         List<Node> nodes = new ArrayList<>();
 
@@ -29,7 +30,7 @@ public class Main {
 
         // Simulate proposing a value
         Proposer proposer = (Proposer) nodes.get(0);
-        proposer.propose(42);
+        proposer.propose(345);
 
         // Give some time for asynchronous messages
         try {

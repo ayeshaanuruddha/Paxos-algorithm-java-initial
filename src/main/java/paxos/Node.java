@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Abstract class representing a node in the Paxos protocol.
+ */
 public abstract class Node implements Serializable {
     protected int nodeId;
     protected List<Node> peers;
